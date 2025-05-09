@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
 #include "amr_controller.hpp"
-#include <iostream>
 
 namespace qrb_ros
 {
@@ -51,6 +50,9 @@ void AMRController::init_nodes()
 
   api_server_ = std::shared_ptr<APIServiceServer>(new APIServiceServer(amr_manager_, dev_sub_));
 
+  node_manager_client_ =
+      std::shared_ptr<NodeManagerServiceClient>(new NodeManagerServiceClient(amr_manager_));
+
   executor_->add_node(api_server_);
   executor_->add_node(mapping_server_);
   executor_->add_node(dev_sub_);
@@ -62,6 +64,7 @@ void AMRController::init_nodes()
   executor_->add_node(cartographer_service_client_);
   executor_->add_node(amr_mode_client_);
   executor_->add_node(amr_status_transporter_);
+  executor_->add_node(node_manager_client_);
 }
 }  // namespace amr
 }  // namespace qrb_ros

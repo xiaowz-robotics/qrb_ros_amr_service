@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -30,6 +30,7 @@ void MappingServiceServer::handle_mapping(const std::shared_ptr<rmw_request_id_t
     const std::shared_ptr<qrb_ros_amr_msgs::srv::Mapping::Request> request,
     std::shared_ptr<qrb_ros_amr_msgs::srv::Mapping::Response> response)
 {
+  (void)request_header;
   uint8_t cmd = request->cmd;
   RCLCPP_INFO(logger_, "handle_mapping, cmd=%d", cmd);
 

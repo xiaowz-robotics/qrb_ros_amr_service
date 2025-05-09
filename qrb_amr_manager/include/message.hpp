@@ -1,19 +1,18 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef MESSAGE_HPP_
-#define MESSAGE_HPP_
+#ifndef QRB_AMR_MANAGER__MESSAGE_HPP_
+#define QRB_AMR_MANAGER__MESSAGE_HPP_
 
-#include <memory>
-#include <string>
-#include <vector>
+#include "common.hpp"
 
 namespace qrb
 {
 namespace amr_manager
 {
+
 class Message
 {
 public:
@@ -126,4 +125,4 @@ public:
 };
 }  // namespace amr_manager
 }  // namespace qrb
-#endif  // MESSAGE_HPP_
+#endif  // QRB_AMR_MANAGER__MESSAGE_HPP_

@@ -23,6 +23,8 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(qrb_ros_robot_base_msgs REQUIRED)
 find_package(qrb_ros_slam_msgs REQUIRED)
+find_package(qrb_amr_manager REQUIRED)
+find_package(lifecycle_msgs REQUIRED)
 ament_auto_find_build_dependencies()
 
 include_directories(
@@ -51,6 +53,7 @@ set(source
   src/service/sub_cmd_service_server.cpp
   src/service/cartographer_service_client.cpp
   src/service/amr_mode_service_client.cpp
+  src/service/node_manager_service_client.cpp
   src/service/mapping_service_server.cpp
   src/action/auto_mapper_action_client.cpp
   src/action/cmd_action_server.cpp
@@ -79,23 +82,23 @@ ament_target_dependencies(qrb_ros_amr
   "sensor_msgs"
   "qrb_ros_robot_base_msgs"
   "qrb_ros_slam_msgs"
+  "qrb_amr_manager"
+  "lifecycle_msgs"
 )
 
 
 
 target_link_libraries(qrb_ros_amr
-  "${PROJECT_SOURCE_DIR}/../build/qrb_amr_manager/libqrb_amr_manager.so"
+  "qrb_amr_manager"
 )
 
 install(TARGETS qrb_ros_amr
     RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-
-
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}/
 )
 
-ament_package()
+ament_auto_package(INSTALL_TO_SHARE launch)

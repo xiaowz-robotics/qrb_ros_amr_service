@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef LOW_POWER_MANAGER_HPP_
-#define LOW_POWER_MANAGER_HPP_
+#ifndef QRB_AMR_MANAGER__LOW_POWER_MANAGER_HPP_
+#define QRB_AMR_MANAGER__LOW_POWER_MANAGER_HPP_
 
 #include "amr_state_machine.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include <memory>
+#include "common.hpp"
 
 namespace qrb
 {
@@ -54,7 +53,8 @@ private:
   std::mutex mtx_;
   int amr_state_;
   change_mode_func_t change_mode_cb_;
-  rclcpp::Logger logger_{ rclcpp::get_logger("low_power_manager") };
+
+  const char * logger_ = "low_power_manager";
 
 public:
   void register_change_mode_callback(change_mode_func_t cb);
@@ -66,4 +66,4 @@ public:
 };
 }  // namespace amr_manager
 }  // namespace qrb
-#endif  // LOW_POWER_MANAGER_HPP_
+#endif  // QRB_AMR_MANAGER__LOW_POWER_MANAGER_HPP_

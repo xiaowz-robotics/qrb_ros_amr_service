@@ -1,18 +1,13 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef MAP_SUBSCRIBER_HPP_
-#define MAP_SUBSCRIBER_HPP_
+#ifndef QRB_ROS_AMR__MAP_SUBSCRIBER_HPP_
+#define QRB_ROS_AMR__MAP_SUBSCRIBER_HPP_
 
-#include "rclcpp/rclcpp.hpp"
 #include "amr_status_transporter.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
 #include "amr_manager.hpp"
-#include <memory>
-
-using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
 
 using namespace qrb::amr_manager;
 
@@ -42,4 +37,4 @@ public:
 };
 }  // namespace amr
 }  // namespace qrb_ros
-#endif  // MAP_SUBSCRIBER_HPP_
+#endif  // QRB_ROS_AMR__MAP_SUBSCRIBER_HPP_

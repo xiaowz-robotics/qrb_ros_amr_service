@@ -1,15 +1,12 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef DEVELOPER_MODE_SUBSCRIBER_HPP_
-#define DEVELOPER_MODE_SUBSCRIBER_HPP_
+#ifndef QRB_ROS_AMR__DEVELOPER_MODE_SUBSCRIBER_HPP_
+#define QRB_ROS_AMR__DEVELOPER_MODE_SUBSCRIBER_HPP_
 
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/int16.hpp"
 #include "amr_manager.hpp"
-#include <memory>
 #include "exception_subscriber.hpp"
 #include "amr_status_transporter.hpp"
 
@@ -131,9 +128,9 @@ class DeveloperModeSubscriber : public rclcpp::Node
 private:
   rclcpp::Subscription<std_msgs::msg::Int16>::SharedPtr sub_;
   rclcpp::Subscription<std_msgs::msg::Int16>::SharedPtr debug_error_sub_;
+  std::shared_ptr<AMRManager> amr_manager_;
   std::shared_ptr<ExceptionSubscriber> exception_sub_;
   std::shared_ptr<AMRStatusTransporter> tansporter_;
-  std::shared_ptr<AMRManager> amr_manager_;
   bool enable_developer_mode_;
   rclcpp::Logger logger_{ rclcpp::get_logger("developer_mode_subscriber") };
 
@@ -153,4 +150,4 @@ public:
 };
 }  // namespace amr
 }  // namespace qrb_ros
-#endif  // DEVELOPER_MODE_SUBSCRIBER_HPP_
+#endif  // QRB_ROS_AMR__DEVELOPER_MODE_SUBSCRIBER_HPP_

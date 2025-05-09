@@ -1,18 +1,12 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef SUB_CMD_SERVICE_SERVER_HPP_
-#define SUB_CMD_SERVICE_SERVER_HPP_
+#ifndef QRB_ROS_AMR__SUB_CMD_SERVICE_SERVER_HPP_
+#define QRB_ROS_AMR__SUB_CMD_SERVICE_SERVER_HPP_
 
-#include "rclcpp/rclcpp.hpp"
-#include "qrb_ros_amr_msgs/srv/sub_cmd.hpp"
 #include "amr_manager.hpp"
-#include <mutex>
-#include <condition_variable>
-#include <memory>
-#include <string>
 
 using namespace qrb::amr_manager;
 
@@ -40,4 +34,4 @@ public:
 }  // namespace amr
 }  // namespace qrb_ros
 
-#endif  // SUB_CMD_SERVICE_SERVER_HPP_
+#endif  // QRB_ROS_AMR__SUB_CMD_SERVICE_SERVER_HPP_
