@@ -1,19 +1,13 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef AMR_MODE_SERVICE_CLIENT_HPP_
-#define AMR_MODE_SERVICE_CLIENT_HPP_
+#ifndef QRB_ROS_AMR__AMR_MODE_SERVICE_CLIENT_HPP_
+#define QRB_ROS_AMR__AMR_MODE_SERVICE_CLIENT_HPP_
 
-#include <condition_variable>
-#include <mutex>
-
-#include "rclcpp/rclcpp.hpp"
 #include "amr_manager.hpp"
-#include "qrb_ros_robot_base_msgs/srv/set_control_mode.hpp"
 
-using SetBaseControlMode = qrb_ros_robot_base_msgs::srv::SetControlMode;
 using namespace qrb::amr_manager;
 
 namespace qrb_ros
@@ -52,4 +46,4 @@ public:
 };
 }  // namespace amr
 }  // namespace qrb_ros
-#endif  // AMR_MODE_SERVICE_CLIENT_HPP_
+#endif  // QRB_ROS_AMR__AMR_MODE_SERVICE_CLIENT_HPP_

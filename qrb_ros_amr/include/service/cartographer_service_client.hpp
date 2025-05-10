@@ -1,23 +1,15 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef CARTOGRAPHER_SERVICE_CLIENT_HPP_
-#define CARTOGRAPHER_SERVICE_CLIENT_HPP_
+#ifndef QRB_ROS_AMR__CARTOGRAPHER_SERVICE_CLIENT_HPP_
+#define QRB_ROS_AMR__CARTOGRAPHER_SERVICE_CLIENT_HPP_
 
-#include "rclcpp/rclcpp.hpp"
 #include "amr_manager.hpp"
-#include "qrb_ros_slam_msgs/srv/slam_command.hpp"
-#include "qrb_ros_slam_msgs/msg/command_code.hpp"
-#include "qrb_ros_navigation_msgs/srv/virtual_path.hpp"
 
 using namespace qrb::amr_manager;
-using SlamCommand = qrb_ros_slam_msgs::srv::SlamCommand;
-using CommandCode = qrb_ros_slam_msgs::msg::CommandCode;
-using VirtualPath = qrb_ros_navigation_msgs::srv::VirtualPath;
 
-#define SERVICE_TIMEOUT_DURATION 5  // timeout is 5 seconds
 #define RemoveWaypointAndVirtualPath 29
 
 namespace qrb_ros
@@ -77,4 +69,4 @@ private:
 
 }  // namespace amr
 }  // namespace qrb_ros
-#endif  // CARTOGRAPHER_SERVICE_CLIENT_HPP_
+#endif  // QRB_ROS_AMR__CARTOGRAPHER_SERVICE_CLIENT_HPP_

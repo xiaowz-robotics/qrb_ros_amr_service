@@ -1,35 +1,19 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef AMR_MANAGER_HPP_
-#define AMR_MANAGER_HPP_
+#ifndef QRB_AMR_MANAGER__AMR_MANAGER_HPP_
+#define QRB_AMR_MANAGER__AMR_MANAGER_HPP_
 
-#include <mutex>
-#include <string.h>
-
+#include "common.hpp"
 #include "amr_state_machine.hpp"
 #include "low_power_manager.hpp"
-#include "rclcpp/rclcpp.hpp"
 
 namespace qrb
 {
 namespace amr_manager
 {
-
-typedef std::function<void(void * buffer)> start_p2p_func_t;
-typedef std::function<void(void * path)> start_follow_path_func_t;
-typedef std::function<void(uint8_t goal, std::vector<uint32_t> & ids)>
-    start_waypoint_follow_path_func_t;
-typedef std::function<void(bool p2p, uint8_t sub_cmd)> sub_cmd_func_t;
-typedef std::function<void(bool start)> start_charging_func_t;
-typedef std::function<void(uint8_t mode)> change_mode_func_t;
-typedef std::function<void(bool exception, int error_code)> notify_exception_func_t;
-typedef std::function<void(int state)> send_amr_state_changed_func_t;
-typedef std::function<void(void)> navigate_to_charging_func_t;
-typedef std::function<void(uint8_t cmd, bool & result)> slam_command_func_t;
-typedef std::function<void(geometry_msgs::msg::Twist & velocity)> publish_twist_func_t;
 
 /**
  * @class navigation_controller::AMRManager
@@ -92,14 +76,17 @@ public:
   // CartographerServiceClient
   void register_slam_command_callback(slam_command_func_t cb);
 
+  // NodeManagerServiceClient
+  void register_node_manager_callback(node_manager_func_t cb);
+
 private:
   std::shared_ptr<AMRStateMachine> state_machine_;
   std::shared_ptr<LowPowerManager> low_power_;
 
   void init();
 
-  rclcpp::Logger logger_{ rclcpp::get_logger("amr_manager") };
+  const char * logger_ = "amr_manager";
 };
 }  // namespace amr_manager
 }  // namespace qrb
-#endif  // AMR_MANAGER_HPP_
+#endif  // QRB_AMR_MANAGER__AMR_MANAGER_HPP_

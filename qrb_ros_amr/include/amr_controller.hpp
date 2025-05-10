@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef AMR_CONTROLLER_HPP_
-#define AMR_CONTROLLER_HPP_
+#ifndef QRB_ROS_AMR__AMR_CONTROLLER_HPP_
+#define QRB_ROS_AMR__AMR_CONTROLLER_HPP_
 
 #include "api_service_server.hpp"
 #include "mapping_service_server.hpp"
@@ -18,6 +18,7 @@
 #include "navigation_action_client.hpp"
 #include "amr_mode_service_client.hpp"
 #include "cartographer_service_client.hpp"
+#include "node_manager_service_client.hpp"
 #include "amr_manager.hpp"
 
 using namespace qrb::amr_manager;
@@ -44,6 +45,7 @@ private:
   std::shared_ptr<LowPowerManager> low_power_;
   std::shared_ptr<CartographerServiceClient> cartographer_service_client_;
   std::shared_ptr<AMRModeServiceClient> amr_mode_client_;
+  std::shared_ptr<NodeManagerServiceClient> node_manager_client_;
 
   void init_nodes();
 
@@ -57,4 +59,4 @@ public:
 };
 }  // namespace amr
 }  // namespace qrb_ros
-#endif  // AMR_CONTROLLER_HPP_
+#endif  // QRB_ROS_AMR__AMR_CONTROLLER_HPP_

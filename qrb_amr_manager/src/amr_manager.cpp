@@ -1,14 +1,7 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
-
-#include <pthread.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
-#include <utility>
 
 #include "amr_manager.hpp"
 
@@ -19,7 +12,7 @@ namespace amr_manager
 
 AMRManager::AMRManager()
 {
-  printf("AMRManager:\n");
+  printf("[%s]: AMRManager\n", logger_);
   init();
 }
 
@@ -78,6 +71,11 @@ void AMRManager::register_slam_command_callback(slam_command_func_t cb)
 void AMRManager::register_publish_twist_callback(publish_twist_func_t cb)
 {
   state_machine_->register_publish_twist_callback(cb);
+}
+
+void AMRManager::register_node_manager_callback(node_manager_func_t cb)
+{
+  state_machine_->register_node_manager_callback(cb);
 }
 
 void AMRManager::process_event(int event)
@@ -157,7 +155,7 @@ bool AMRManager::stop_mapping()
 
 void AMRManager::init()
 {
-  RCLCPP_INFO(logger_, "init");
+  printf("[%s]: init\n", logger_);
 
   state_machine_ = std::shared_ptr<AMRStateMachine>(new AMRStateMachine());
 

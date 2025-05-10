@@ -1,14 +1,9 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#include "rclcpp/rclcpp.hpp"
-#include "qrb_ros_amr_msgs/srv/api.hpp"
-#include "nav_msgs/msg/path.hpp"
 #include "api_service_server.hpp"
-#include "amr_controller.hpp"
-#include "cmd_action_server.hpp"
 
 namespace qrb_ros
 {
@@ -35,6 +30,7 @@ void APIServiceServer::handle_api(const std::shared_ptr<rmw_request_id_t> reques
     const std::shared_ptr<qrb_ros_amr_msgs::srv::API::Request> request,
     std::shared_ptr<qrb_ros_amr_msgs::srv::API::Response> response)
 {
+  (void)request_header;
   bool succeed = amr_manager_->check_potential_state(Command::OTHER);
   if (!succeed) {
     RCLCPP_INFO(this->get_logger(), "current state is error");

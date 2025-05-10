@@ -6,31 +6,8 @@
 #ifndef AMR_STATUS_TRANSPORTER_HPP_
 #define AMR_STATUS_TRANSPORTER_HPP_
 
-#include "rclcpp/rclcpp.hpp"
-#include "qrb_ros_amr_msgs/msg/amr_status.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
-#include "qrb_ros_amr_msgs/msg/wheel_status.hpp"
-#include "qrb_ros_amr_msgs/msg/battery_info.hpp"
-#include "qrb_ros_robot_base_msgs/msg/charger_cmd.hpp"
-#include "sensor_msgs/msg/battery_state.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "geometry_msgs/msg/twist.hpp"
 #include "amr_manager.hpp"
-
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
-#include "tf2_ros/buffer.h"
-#include "tf2_ros/transform_listener.h"
-#include "tf2/LinearMath/Quaternion.h"
-#include "nav_2d_msgs/msg/twist2_d.hpp"
-#include "nav_2d_msgs/msg/twist2_d_stamped.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-
-#include <memory>
-
-using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
-using PoseStamped = geometry_msgs::msg::PoseStamped;
-using ChargerCmd = qrb_ros_robot_base_msgs::msg::ChargerCmd;
+#include "amr_manager/common.hpp"
 
 using namespace qrb::amr_manager;
 
@@ -102,7 +79,7 @@ private:
   bool is_equal(double a, double b);
   void pose_changed_callback(const PoseStamped::SharedPtr pose);
   void battery_status_callback(const sensor_msgs::msg::BatteryState::SharedPtr msg);
-  void send_velocity(geometry_msgs::msg::Twist & velocity);
+  void send_velocity(twist_vel & velocity);
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
 
 public:

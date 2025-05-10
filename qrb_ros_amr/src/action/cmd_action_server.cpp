@@ -1,15 +1,9 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "qrb_ros_amr_msgs/action/cmd.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "cmd_action_server.hpp"
-#include <iostream>
-#include <memory>
 
 namespace qrb_ros
 {

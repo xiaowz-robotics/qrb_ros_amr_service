@@ -1,34 +1,15 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#ifndef NAVIGATION_ACTION_CLIENT_HPP_
-#define NAVIGATION_ACTION_CLIENT_HPP_
+#ifndef QRB_ROS_AMR__NAVIGATION_ACTION_CLIENT_HPP_
+#define QRB_ROS_AMR__NAVIGATION_ACTION_CLIENT_HPP_
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "nav2_msgs/action/navigate_to_pose.hpp"
-#include "nav2_msgs/action/follow_path.hpp"
-#include "qrb_ros_navigation_msgs/action/follow_path.hpp"
-#include "qrb_ros_amr_msgs/srv/sub_cmd.hpp"
-#include "nav_msgs/msg/path.hpp"
 #include "amr_manager.hpp"
-#include <memory>
+#include "cmd_action_server.hpp"
 
-using PoseStamped = geometry_msgs::msg::PoseStamped;
-using Path = nav_msgs::msg::Path;
-using FollowPath = nav2_msgs::action::FollowPath;
-using WaypointFollowPath = qrb_ros_navigation_msgs::action::FollowPath;
-using P2P = nav2_msgs::action::NavigateToPose;
-using GoalHandleFollow = rclcpp_action::ClientGoalHandle<FollowPath>;
-using GoalHandleWaypointFollowPath = rclcpp_action::ClientGoalHandle<WaypointFollowPath>;
-using GoalHandleP2P = rclcpp_action::ClientGoalHandle<P2P>;
-
-using SubCmd = qrb_ros_amr_msgs::srv::SubCmd;
 using namespace qrb::amr_manager;
-
-#define SERVICE_TIMEOUT_DURATION 5  // timeout is 5 seconds
 
 namespace qrb_ros
 {
@@ -107,4 +88,4 @@ public:
 };
 }  // namespace amr
 }  // namespace qrb_ros
-#endif  // NAVIGATION_ACTION_CLIENT_HPP_
+#endif  // QRB_ROS_AMR__NAVIGATION_ACTION_CLIENT_HPP_

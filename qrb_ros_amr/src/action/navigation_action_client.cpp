@@ -1,15 +1,9 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#include "amr_manager.hpp"
 #include "navigation_action_client.hpp"
-#include "cmd_action_server.hpp"
-#include "sub_cmd_service_server.hpp"
-
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2/LinearMath/Matrix3x3.h>
 
 constexpr char const * service_name = "follow_path_sub_cmd";
 
@@ -297,6 +291,7 @@ void NavigationActionClient::follow_goal_response_callback(GoalHandleFollow::Sha
 void NavigationActionClient::follow_feedback_callback(GoalHandleFollow::SharedPtr,
     const std::shared_ptr<const FollowPath::Feedback> feedback)
 {
+  (void)feedback;
   RCLCPP_DEBUG(logger_, "[FOLLOW_PATH] Publish feedback");
 }
 

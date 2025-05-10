@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -21,13 +21,13 @@ LowPowerManager::~LowPowerManager() {}
 
 void LowPowerManager::register_change_mode_callback(change_mode_func_t cb)
 {
-  RCLCPP_INFO(logger_, "register_change_mode_callback");
+  printf("[%s]: register_change_mode_callback\n", logger_);
   change_mode_cb_ = cb;
 }
 
 void LowPowerManager::notify_amr_state_changed(int state)
 {
-  RCLCPP_INFO(logger_, "notify_amr_state_changed");
+  printf("[%s]: notify_amr_state_changed\n", logger_);
   std::unique_lock<std::mutex> lck(mtx_);
   amr_state_ = state;
 }
@@ -35,7 +35,7 @@ void LowPowerManager::notify_amr_state_changed(int state)
 void LowPowerManager::notify_battery_changed(float battery_vol)
 {
   if (battery_vol <= LOW_POWER_VOLTAGE_LEVEL) {
-    RCLCPP_INFO(logger_, "Start return charging station");
+    printf("[%s]: Start return charging station\n", logger_);
     send_event(Message::LOW_POWER);
   }
   current_battery_voltage_level_ = battery_vol;
@@ -46,31 +46,31 @@ void LowPowerManager::notify_charging_state_changed(uint8_t state)
   charging_station_ = state;
   switch (state) {
     case (uint8_t)ChargerState::IDLE:
-      RCLCPP_INFO(logger_, "Charger idle");
+      printf("[%s]: Charger idle\n", logger_);
       set_navigation_mode();
       break;
     case (uint8_t)ChargerState::SEARCHING:
-      RCLCPP_INFO(logger_, "Searching...");
+      printf("[%s]: Searching...\n", logger_);
       break;
     case (uint8_t)ChargerState::CONTROLLING:
-      RCLCPP_INFO(logger_, "Controlling...");
+      printf("[%s]: Controlling...\n", logger_);
       set_charger_mode();
       break;
     case (uint8_t)ChargerState::FORCE_CHARGING:
-      RCLCPP_INFO(logger_, "Attached charger pie");
+      printf("[%s]: Attached charger pie\n", logger_);
       send_event(Message::RETURN_CHARGING_FINISH);
       break;
     case (uint8_t)ChargerState::CHARGING:
-      RCLCPP_INFO(logger_, "Charging...");
+      printf("[%s]: Charging...\n", logger_);
       send_event(Message::NORMAL_POWER);
       set_navigation_mode();
       break;
     case (uint8_t)ChargerState::CHARGING_DONE:
-      RCLCPP_INFO(logger_, "Charging done");
+      printf("[%s]: Charging done\n", logger_);
       set_navigation_mode();
       break;
     case (uint8_t)ChargerState::ERROR:
-      RCLCPP_ERROR(logger_, "Charging station is error");
+      printf("[%s]: Charging station is error\n", logger_);
       set_navigation_mode();
       break;
     default:

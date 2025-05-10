@@ -1,16 +1,9 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
 #include "map_subscriber.hpp"
-#include "amr_status_transporter.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
-#include <iostream>
-#include <fstream>
-#include <string>
-
-using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
 
 #define MAP_PATH "map.txt"
 

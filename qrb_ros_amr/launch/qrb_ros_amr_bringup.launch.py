@@ -11,11 +11,13 @@ from launch.substitutions import PathJoinSubstitution
 
 
 def generate_launch_description():
-    """Launch file to bring up qti amr controller node standalone."""
+    """Launch file to bring up qrb ros amr service node standalone."""
 
     qrb_ros_amr_node = Node(
         package='qrb_ros_amr',
         executable='qrb_ros_amr',
+        output='screen',
+        emulate_tty=True
     )
 
     return LaunchDescription([qrb_ros_amr_node])

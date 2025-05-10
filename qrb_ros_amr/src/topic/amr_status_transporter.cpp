@@ -1,14 +1,10 @@
 /*
- * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
 #include "amr_status_transporter.hpp"
-#include "amr_manager.hpp"
-#include "nav_msgs/msg/occupancy_grid.hpp"
-#include "amr_manager/common.hpp"
 
-using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
 using namespace std::chrono_literals;
 
 namespace qrb_ros
@@ -57,7 +53,7 @@ void AMRStatusTransporter::init_publisher()
 
   twist_pub_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
 
-  publish_twist_cb_ = [&](geometry_msgs::msg::Twist & velocity) { send_velocity(velocity); };
+  publish_twist_cb_ = [&](twist_vel & velocity) { send_velocity(velocity); };
   amr_manager_->register_publish_twist_callback(publish_twist_cb_);
 }
 
@@ -121,7 +117,7 @@ void AMRStatusTransporter::odom_callback(const nav_msgs::msg::Odometry::SharedPt
 void AMRStatusTransporter::wheel_status_callback(
     const qrb_ros_amr_msgs::msg::WheelStatus::SharedPtr msg)
 {
-  // TODO:
+  (void)msg;
 }
 
 void AMRStatusTransporter::send_amr_state_changed(int state)
@@ -305,7 +301,7 @@ void AMRStatusTransporter::start_charging()
 {
   RCLCPP_INFO(logger_, "Start charging");
   ChargerCmd msg;
-  msg.cmd == ChargerCmd::START_CHARGING;
+  msg.cmd = ChargerCmd::START_CHARGING;
   charger_pub_->publish(msg);
 }
 
@@ -313,15 +309,22 @@ void AMRStatusTransporter::stop_charging()
 {
   RCLCPP_INFO(logger_, "Stop charging");
   ChargerCmd msg;
-  msg.cmd == ChargerCmd::STOP_CHARGING;
+  msg.cmd = ChargerCmd::STOP_CHARGING;
   charger_pub_->publish(msg);
 }
 
-void AMRStatusTransporter::send_velocity(geometry_msgs::msg::Twist & velocity)
+void AMRStatusTransporter::send_velocity(twist_vel & velocity)
 {
-  RCLCPP_INFO(logger_, "send velocity(%.2f, %.2f, %.2f) to robot", velocity.linear.x,
-      velocity.linear.y, velocity.angular.z);
-  twist_pub_->publish(velocity);
+  geometry_msgs::msg::Twist twist;
+  twist.linear.x = velocity.x;
+  twist.linear.y = velocity.y;
+  twist.linear.z = 0;
+  twist.angular.x = 0;
+  twist.angular.y = 0;
+  twist.angular.z = velocity.z;
+  RCLCPP_INFO(logger_, "send velocity(%.2f, %.2f, %.2f) to robot", twist.linear.x, twist.linear.y,
+      twist.angular.z);
+  twist_pub_->publish(twist);
 }
 }  // namespace amr
 }  // namespace qrb_ros
