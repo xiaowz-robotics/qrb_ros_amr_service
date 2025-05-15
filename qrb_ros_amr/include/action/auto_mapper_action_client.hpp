@@ -7,6 +7,7 @@
 #define QRB_ROS_AMR__AUTO_MAPPER_ACTION_CLIENT_HPP_
 
 #include "amr_manager.hpp"
+#include "ros_common.hpp"
 #include "cmd_action_server.hpp"
 
 using namespace qrb::amr_manager;

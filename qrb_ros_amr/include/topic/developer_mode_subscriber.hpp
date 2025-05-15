@@ -7,6 +7,7 @@
 #define QRB_ROS_AMR__DEVELOPER_MODE_SUBSCRIBER_HPP_
 
 #include "amr_manager.hpp"
+#include "ros_common.hpp"
 #include "exception_subscriber.hpp"
 #include "amr_status_transporter.hpp"
 

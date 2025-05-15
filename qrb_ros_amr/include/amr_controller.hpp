@@ -20,6 +20,7 @@
 #include "cartographer_service_client.hpp"
 #include "node_manager_service_client.hpp"
 #include "amr_manager.hpp"
+#include "ros_common.hpp"
 
 using namespace qrb::amr_manager;
 

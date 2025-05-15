@@ -7,6 +7,7 @@
 #define QRB_ROS_AMR__AMR_MODE_SERVICE_CLIENT_HPP_
 
 #include "amr_manager.hpp"
+#include "ros_common.hpp"
 
 using namespace qrb::amr_manager;
 

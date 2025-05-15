@@ -7,7 +7,7 @@
 #define AMR_STATUS_TRANSPORTER_HPP_
 
 #include "amr_manager.hpp"
-#include "amr_manager/common.hpp"
+#include "ros_common.hpp"
 
 using namespace qrb::amr_manager;
 
