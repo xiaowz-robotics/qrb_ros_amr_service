@@ -11,7 +11,7 @@
 
 using namespace qrb::amr_manager;
 
-#define RemoveWaypointAndVirtualPath 29
+#define RemoveWaypointAndVirtualPath 11
 
 namespace qrb_ros
 {
