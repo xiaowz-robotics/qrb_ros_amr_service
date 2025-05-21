@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(qrb_ros_amr)
+project(qrb_ros_amr VERSION 1.0.1)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -90,6 +90,11 @@ ament_target_dependencies(qrb_ros_amr
 
 target_link_libraries(qrb_ros_amr
   "qrb_amr_manager"
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION 1
 )
 
 install(TARGETS qrb_ros_amr
