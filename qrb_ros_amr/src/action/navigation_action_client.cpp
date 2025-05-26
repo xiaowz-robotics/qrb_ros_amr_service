@@ -32,7 +32,7 @@ void NavigationActionClient::create_nav_client()
 
   this->p2p_client_ptr_ = rclcpp_action::create_client<P2P>(this->get_node_base_interface(),
       this->get_node_graph_interface(), this->get_node_logging_interface(),
-      this->get_node_waitables_interface(), "p2p");
+      this->get_node_waitables_interface(), "navigate_to_pose");
 
   follow_path_service_client_ = this->create_client<SubCmd>(service_name);
 
