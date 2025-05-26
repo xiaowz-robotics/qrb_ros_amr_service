@@ -457,6 +457,7 @@ void NavigationActionClient::charging_station_result_callback(
 
 void NavigationActionClient::generate_pose(double & x, double & y, double & z, PoseStamped & pose)
 {
+  pose.header.frame_id = "map";
   pose.pose.position.x = x;
   pose.pose.position.y = y;
   pose.pose.position.z = 0;
