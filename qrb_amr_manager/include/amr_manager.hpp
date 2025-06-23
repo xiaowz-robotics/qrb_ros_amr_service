@@ -38,6 +38,7 @@ public:
 
   // CmdActionServer
   bool check_potential_state(int cmd);
+  bool check_potential_subcmd_state(uint8_t subcmd);
   void process_cmd(int cmd, void * buffer, size_t len);
   void process_cmd(int cmd, uint32_t goal_id, std::vector<uint32_t> & ids);
 

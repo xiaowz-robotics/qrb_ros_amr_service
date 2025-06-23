@@ -31,6 +31,7 @@ private:
   bool has_map_;
   int current_state_;
   bool running_;
+  bool low_power_;
 
   MessageQueue queue_;
   std::shared_ptr<std::thread> thread_handle_msg_;
@@ -128,6 +129,7 @@ public:
   bool start_mapping();
   bool stop_mapping();
   bool check_potential_state(int cmd);
+  bool check_potential_subcmd_state(uint8_t subcmd);
 
   AMRStateMachine();
   ~AMRStateMachine();

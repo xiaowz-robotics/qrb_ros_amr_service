@@ -93,6 +93,11 @@ bool AMRManager::check_potential_state(int cmd)
   return state_machine_->check_potential_state(cmd);
 }
 
+bool AMRManager::check_potential_subcmd_state(uint8_t subcmd)
+{
+  return state_machine_->check_potential_subcmd_state(subcmd);
+}
+
 void AMRManager::process_cmd(int cmd, void * buffer, size_t len)
 {
   state_machine_->process_cmd(cmd, buffer, len);

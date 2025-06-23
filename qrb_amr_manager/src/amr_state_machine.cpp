@@ -18,6 +18,7 @@ AMRStateMachine::AMRStateMachine()
       std::make_shared<std::thread>(std::mem_fn(&AMRStateMachine::handle_msg), this);
   send_mapper_cmd_ = false;
   send_navigator_cmd_ = false;
+  low_power_ = false;
 }
 
 AMRStateMachine::~AMRStateMachine()
@@ -321,13 +322,8 @@ bool AMRStateMachine::handle_message(const Message & msg)
       break;
     case Message::LOW_POWER:
       if (current_state_ == AMRStateMachine::ON_ME) {
-        if (!has_map_) {
-          update_state(last_state, AMRStateMachine::IDLE);
-          enter_idle_state();
-        } else {
-          enter_ready_state();
-          update_state(last_state, AMRStateMachine::READY);
-        }
+        enter_idle_state();
+        update_state(last_state, AMRStateMachine::IDLE);
       } else if (current_state_ == AMRStateMachine::READY ||
                  current_state_ == AMRStateMachine::ON_FOLLOW_PATH ||
                  current_state_ == AMRStateMachine::FOLLOW_PATH_WAIT ||
@@ -337,12 +333,14 @@ bool AMRStateMachine::handle_message(const Message & msg)
         enter_ready_state();
         send_return_charging_message();
       }
+      low_power_ = true;
       break;
     case Message::NORMAL_POWER:
       if (current_state_ == AMRStateMachine::LOW_POWER_CHARGING) {
         update_state(last_state, AMRStateMachine::READY);
         enter_ready_state();
       }
+      low_power_ = false;
       break;
     case Message::AMR_EXCEPTION: {
       enter_on_error_state();
@@ -359,13 +357,8 @@ bool AMRStateMachine::handle_message(const Message & msg)
       break;
     case Message::CANCEL:
       if (current_state_ == AMRStateMachine::ON_ME) {
-        if (!has_map_) {
-          update_state(last_state, AMRStateMachine::IDLE);
-          enter_idle_state();
-        } else {
-          enter_ready_state();
-          update_state(last_state, AMRStateMachine::READY);
-        }
+        enter_idle_state();
+        update_state(last_state, AMRStateMachine::IDLE);
       } else if (current_state_ == AMRStateMachine::ON_FOLLOW_PATH ||
                  current_state_ == AMRStateMachine::ON_P2PNAV ||
                  current_state_ == AMRStateMachine::P2PNAV_WAIT ||
@@ -445,9 +438,12 @@ std::string AMRStateMachine::get_current_state()
 
 void AMRStateMachine::enter_idle_state()
 {
-  if (current_state_ == AMRStateMachine::ON_AE) {
-    // TODO:
-    return;
+  if (current_state_ == AMRStateMachine::ON_ME) {
+    bool result;
+    slam_command_cb_((uint8_t)Slam_Command::StopMapping, result);
+    if (!result) {
+      printf("[%s]: Stop mapping failed\n", logger_);
+    }
   }
 }
 
@@ -461,6 +457,9 @@ void AMRStateMachine::enter_ready_state()
     } else if ((current_state_ == AMRStateMachine::ON_P2PNAV) ||
                (current_state_ == AMRStateMachine::P2PNAV_WAIT)) {
       printf("[%s]: Cancel p2p navigaiton\n", logger_);
+      sub_cmd_cb_(true, SubCommand::CANCEL);
+    } else if (current_state_ == AMRStateMachine::ON_RETURN_CHARGING) {
+      printf("[%s]: Cancel return charing station\n", logger_);
       sub_cmd_cb_(true, SubCommand::CANCEL);
     }
     send_navigator_cmd_ = false;
@@ -519,11 +518,13 @@ void AMRStateMachine::enter_on_error_state()
   if (send_navigator_cmd_) {
     printf(
         "[%s]: Send cancel nav command when amr is error, state = %d\n", logger_, current_state_);
-    if (current_state_ == AMRStateMachine::FOLLOW_PATH_WAIT ||
-        current_state_ == AMRStateMachine::ON_FOLLOW_PATH) {
+    if ((current_state_ == AMRStateMachine::FOLLOW_PATH_WAIT) ||
+        (current_state_ == AMRStateMachine::ON_FOLLOW_PATH)) {
       sub_cmd_cb_(false, SubCommand::CANCEL);
-    } else if (current_state_ == AMRStateMachine::ON_P2PNAV ||
-               current_state_ == AMRStateMachine::P2PNAV_WAIT) {
+    } else if ((current_state_ == AMRStateMachine::ON_P2PNAV) ||
+               (current_state_ == AMRStateMachine::P2PNAV_WAIT)) {
+      sub_cmd_cb_(true, SubCommand::CANCEL);
+    } else if (current_state_ == AMRStateMachine::ON_RETURN_CHARGING) {
       sub_cmd_cb_(true, SubCommand::CANCEL);
     } else {
       printf("[%s]: Check the nav state when amr is error\n", logger_);
@@ -545,6 +546,7 @@ void AMRStateMachine::enter_follow_path_wait_state()
 
 void AMRStateMachine::enter_on_return_charging_state()
 {
+  send_navigator_cmd_ = true;
   return_charging_station();
   start_charging_cb_(true);
 }
@@ -572,7 +574,7 @@ void AMRStateMachine::return_charging_station()
 
 bool AMRStateMachine::check_potential_state(int cmd)
 {
-  printf("[%s]: rReceive cmd: [%s]: current_state:%s\n", logger_,
+  printf("[%s]: Receive cmd: [%s]: current_state:%s\n", logger_,
       Command::cmd_to_string(cmd).c_str(), get_current_state().c_str());
 
   if (current_state_ == ON_ERROR) {
@@ -614,6 +616,51 @@ bool AMRStateMachine::check_potential_state(int cmd)
   }
 
   printf("[%s]: check_potential_state(%d,%d) return false\n", logger_, cmd, current_state_);
+  return false;
+}
+
+bool AMRStateMachine::check_potential_subcmd_state(uint8_t subcmd)
+{
+  printf("[%s]: Receive subcmd: [%s]: current_state:%s\n", logger_,
+      SubCommand::to_string(subcmd).c_str(), get_current_state().c_str());
+
+  if ((subcmd == SubCommand::PAUSE) &&
+      ((current_state_ == P2PNAV_WAIT) || (current_state_ == FOLLOW_PATH_WAIT) ||
+          (current_state_ == ON_ME))) {
+    printf("[%s]: check_potential_subcmd_state(%d,%d) return false\n", logger_, subcmd,
+        current_state_);
+    return false;
+  }
+
+  if ((subcmd == SubCommand::RESUME) &&
+      ((current_state_ == ON_P2PNAV) || (current_state_ == ON_FOLLOW_PATH) ||
+          (current_state_ == ON_ME))) {
+    printf("[%s]: check_potential_subcmd_state(%d,%d) return false\n", logger_, subcmd,
+        current_state_);
+    return false;
+  }
+
+  if ((subcmd == SubCommand::CANCEL) && (current_state_ == ON_RETURN_CHARGING)) {
+    if (low_power_) {
+      printf("[%s]: check_potential_subcmd_state(%d,%d) return false when low power\n", logger_,
+          subcmd, current_state_);
+      return false;
+    } else {
+      printf("[%s]: check_potential_subcmd_state(%d,%d) return true when normal power\n", logger_,
+          subcmd, current_state_);
+      return true;
+    }
+  }
+
+  if ((current_state_ == ON_P2PNAV) || (current_state_ == ON_FOLLOW_PATH) ||
+      (current_state_ == P2PNAV_WAIT) || (current_state_ == FOLLOW_PATH_WAIT) ||
+      (current_state_ == ON_ME)) {
+    printf(
+        "[%s]: check_potential_subcmd_state(%d,%d) return true\n", logger_, subcmd, current_state_);
+    return true;
+  }
+
+  printf("[%s]: check_potential_state(%d,%d) return false\n", logger_, subcmd, current_state_);
   return false;
 }
 
@@ -762,7 +809,7 @@ void AMRStateMachine::update_state(int last_state, int state)
   if (last_state != current_state_) {
     notify_state_machine_changed();
   }
-  printf("[%s]: current state: [%s]: last state: %s\n", logger_, get_current_state().c_str(),
+  printf("[%s]: current state: %s: last state: %s\n", logger_, get_current_state().c_str(),
       state_to_string(last_state).c_str());
 }
 
