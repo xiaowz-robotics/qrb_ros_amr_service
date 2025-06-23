@@ -86,8 +86,6 @@ ament_target_dependencies(qrb_ros_amr
   "lifecycle_msgs"
 )
 
-
-
 target_link_libraries(qrb_ros_amr
   "qrb_amr_manager"
 )

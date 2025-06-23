@@ -31,10 +31,10 @@ void SubCmdServer::handle_sub_cmd(const std::shared_ptr<rmw_request_id_t> reques
 {
   RCLCPP_INFO(this->get_logger(), "handle_sub_cmd");
   (void)request_header;
-  int cmd = request->subcommand;
+  uint8_t cmd = request->subcommand;
   RCLCPP_INFO(
       this->get_logger(), "Incoming request sub cmd: %s", (SubCommand::to_string(cmd)).c_str());
-  bool succeed = amr_manager_->check_potential_state(Command::SUB_CMD);
+  bool succeed = amr_manager_->check_potential_subcmd_state(cmd);
   if (!succeed) {
     RCLCPP_INFO(this->get_logger(), "current state is not ON_Nav or ON_FollowPath");
     response->result = false;
