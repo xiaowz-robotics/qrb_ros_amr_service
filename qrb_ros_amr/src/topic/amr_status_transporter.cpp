@@ -19,6 +19,8 @@ AMRStatusTransporter::AMRStatusTransporter(std::shared_ptr<AMRManager> & amr_man
   init_subscription();
   init_tf_subscriber();
   init_publisher();
+  init_service_client();
+  init_battery_status();
   last_time_ = 0;
 }
 
@@ -68,6 +70,11 @@ void AMRStatusTransporter::init_subscription()
       "amr_pose", 10, std::bind(&AMRStatusTransporter::pose_changed_callback, this, _1));
   vel_sub_ = create_subscription<nav_msgs::msg::Odometry>("odom", rclcpp::SystemDefaultsQoS(),
       std::bind(&AMRStatusTransporter::odom_callback, this, std::placeholders::_1));
+}
+
+void AMRStatusTransporter::init_service_client()
+{
+  client_ = this->create_client<GetBatteryState>("get_battery_state");
 }
 
 void AMRStatusTransporter::notify_exception_event(bool exception, uint8_t error_code)
@@ -325,6 +332,52 @@ void AMRStatusTransporter::send_velocity(twist_vel & velocity)
   RCLCPP_INFO(logger_, "send velocity(%.2f, %.2f, %.2f) to robot", twist.linear.x, twist.linear.y,
       twist.angular.z);
   twist_pub_->publish(twist);
+}
+
+void AMRStatusTransporter::init_battery_status()
+{
+  voltage_ = 0;
+  get_battery_level();
+
+  message_.status_change_id = (int)StatusID::Battery_Level;
+  message_.battery_vol = voltage_;
+  if (voltage_ != 0) {
+    RCLCPP_INFO(
+        logger_, "init battery status voltage=%.2f, state=%d", voltage_, power_supply_status_);
+    amr_manager_->notify_battery_changed(voltage_);
+    amr_manager_->notify_charging_state_changed(power_supply_status_);
+    send_amr_status(message_);
+  } else {
+    RCLCPP_WARN(logger_, "Init battery status failed.");
+  }
+}
+
+void AMRStatusTransporter::get_battery_level()
+{
+  auto request = std::make_shared<GetBatteryState::Request>();
+  send_request(request);
+}
+
+void AMRStatusTransporter::send_request(const GetBatteryState::Request::SharedPtr request)
+{
+  while (!client_->wait_for_service(1s)) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(logger_, "Interrupted while waiting for the service. Exiting.");
+      return;
+    }
+    RCLCPP_INFO(logger_, "service not available, waiting again...");
+  }
+  using ServiceResponseFuture = rclcpp::Client<GetBatteryState>::SharedFuture;
+  auto response_received_callback = [this](ServiceResponseFuture future) {
+    std::unique_lock<std::mutex> lck(mtx_);
+    auto result = future.get();
+    voltage_ = result->battery_state.voltage;
+    power_supply_status_ = result->battery_state.power_supply_status;
+    cv_.notify_one();
+  };
+  auto future_result = client_->async_send_request(request, response_received_callback);
+  std::unique_lock<std::mutex> lck(mtx_);
+  cv_.wait(lck);
 }
 }  // namespace amr
 }  // namespace qrb_ros

@@ -74,6 +74,8 @@ bool NodeManagerServiceClient::activate_node(bool active)
   } else {
     deactivate_node();
     current_lifecycle_state = (uint32_t)Lifecycle_State::Inactive;
+    cleanup_node();
+    current_lifecycle_state = (uint32_t)Lifecycle_State::UnConfigured;
   }
 
   return execute_result_;
@@ -108,6 +110,18 @@ bool NodeManagerServiceClient::deactivate_node()
   RCLCPP_INFO(logger_, "deactivate_node");
   auto request = std::make_shared<ChangeState::Request>();
   request->transition.id = lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE;
+
+  for (rclcpp::Client<ChangeState>::SharedPtr client : client_list_) {
+    send_request(request, client);
+  }
+  return execute_result_;
+}
+
+bool NodeManagerServiceClient::cleanup_node()
+{
+  RCLCPP_INFO(logger_, "cleanup_node");
+  auto request = std::make_shared<ChangeState::Request>();
+  request->transition.id = lifecycle_msgs::msg::Transition::TRANSITION_CLEANUP;
 
   for (rclcpp::Client<ChangeState>::SharedPtr client : client_list_) {
     send_request(request, client);

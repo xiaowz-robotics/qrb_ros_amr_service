@@ -212,12 +212,12 @@ bool AMRStateMachine::handle_message(const Message & msg)
   switch (msg.type) {
     case Message::INIT_AMR:
       if (current_state_ == AMRStateMachine::IN_ACTIVE) {
+        activate_node();
         if (!has_map_) {
           update_state(last_state, AMRStateMachine::IDLE);
         } else {
           update_state(last_state, AMRStateMachine::READY);
         }
-        activate_node();
       }
       break;
     case Message::RELEASE_AMR:
@@ -228,29 +228,29 @@ bool AMRStateMachine::handle_message(const Message & msg)
       } else if (current_state_ == AMRStateMachine::ON_FOLLOW_PATH) {
         sub_cmd_cb_(false, SubCommand::CANCEL);
       }
-      update_state(last_state, AMRStateMachine::IN_ACTIVE);
       deactivate_node();
+      update_state(last_state, AMRStateMachine::IN_ACTIVE);
       break;
     case Message::ME_COMPLETED:
       if (current_state_ != AMRStateMachine::ON_ME) {
         return false;
       }
-      update_state(last_state, AMRStateMachine::ME_DONE);
       enter_me_done_state();
+      update_state(last_state, AMRStateMachine::ME_DONE);
       break;
     case Message::ME:
       if (current_state_ != AMRStateMachine::IDLE && current_state_ != AMRStateMachine::READY) {
         return false;
       }
-      update_state(last_state, AMRStateMachine::ON_ME);
       enter_on_me_state();
+      update_state(last_state, AMRStateMachine::ON_ME);
       break;
     case Message::AE:
       if (current_state_ != AMRStateMachine::IDLE && current_state_ != AMRStateMachine::READY) {
         return false;
       }
-      update_state(last_state, AMRStateMachine::ON_AE);
       enter_on_ae_state();
+      update_state(last_state, AMRStateMachine::ON_AE);
       break;
     case Message::P2PNAV:
       if (current_state_ != AMRStateMachine::READY &&
@@ -263,9 +263,8 @@ bool AMRStateMachine::handle_message(const Message & msg)
         sub_cmd_cb_(false, SubCommand::CANCEL);
         usleep(2 * 1000 * 1000);
       }
-
-      update_state(last_state, AMRStateMachine::ON_P2PNAV);
       enter_on_p2p_state(msg);
+      update_state(last_state, AMRStateMachine::ON_P2PNAV);
       break;
     case Message::FOLLOW_PATH:
       if (current_state_ != AMRStateMachine::READY &&
@@ -278,9 +277,8 @@ bool AMRStateMachine::handle_message(const Message & msg)
         sub_cmd_cb_(true, SubCommand::CANCEL);
         usleep(2 * 1000 * 1000);
       }
-
-      update_state(last_state, AMRStateMachine::ON_FOLLOW_PATH);
       enter_on_follow_path_state(msg);
+      update_state(last_state, AMRStateMachine::ON_FOLLOW_PATH);
       break;
     case Message::WAYPOINT_FOLLOW_PATH:
       if (current_state_ != AMRStateMachine::READY &&
@@ -288,8 +286,8 @@ bool AMRStateMachine::handle_message(const Message & msg)
           current_state_ != AMRStateMachine::FOLLOW_PATH_WAIT) {
         return false;
       }
-      update_state(last_state, AMRStateMachine::ON_FOLLOW_PATH);
       enter_on_waypoint_follow_path_state(msg);
+      update_state(last_state, AMRStateMachine::ON_FOLLOW_PATH);
       break;
     case Message::AE_FINISH:
       if (current_state_ == AMRStateMachine::ON_AE || current_state_ == AMRStateMachine::IDLE) {
@@ -329,17 +327,18 @@ bool AMRStateMachine::handle_message(const Message & msg)
                  current_state_ == AMRStateMachine::FOLLOW_PATH_WAIT ||
                  current_state_ == AMRStateMachine::ON_P2PNAV ||
                  current_state_ == AMRStateMachine::P2PNAV_WAIT) {
-        update_state(last_state, AMRStateMachine::READY);
         enter_ready_state();
+        update_state(last_state, AMRStateMachine::READY);
         send_return_charging_message();
       }
       low_power_ = true;
       break;
     case Message::NORMAL_POWER:
       if (current_state_ == AMRStateMachine::LOW_POWER_CHARGING) {
-        update_state(last_state, AMRStateMachine::READY);
         enter_ready_state();
+        update_state(last_state, AMRStateMachine::READY);
       }
+      start_charging_cb_(false);
       low_power_ = false;
       break;
     case Message::AMR_EXCEPTION: {
@@ -350,8 +349,8 @@ bool AMRStateMachine::handle_message(const Message & msg)
     } break;
     case Message::AMR_NORMAL:
       if (current_state_ == AMRStateMachine::ON_ERROR) {
-        update_state(last_state, AMRStateMachine::READY);
         enter_ready_state();
+        update_state(last_state, AMRStateMachine::READY);
         notify_exception_cb_(false, 0);
       }
       break;
@@ -373,38 +372,38 @@ bool AMRStateMachine::handle_message(const Message & msg)
     case Message::PAUSE:
       printf("[%s]: Message::PAUSE:,current_state_=%d\n", logger_, current_state_);
       if (current_state_ == AMRStateMachine::ON_FOLLOW_PATH) {
-        update_state(last_state, AMRStateMachine::FOLLOW_PATH_WAIT);
         enter_follow_path_wait_state();
+        update_state(last_state, AMRStateMachine::FOLLOW_PATH_WAIT);
       } else if (current_state_ == AMRStateMachine::ON_P2PNAV) {
-        update_state(last_state, AMRStateMachine::P2PNAV_WAIT);
         enter_p2p_wait_state();
+        update_state(last_state, AMRStateMachine::P2PNAV_WAIT);
       } else {
         return false;
       }
       break;
     case Message::RESUME:
       if (current_state_ == AMRStateMachine::FOLLOW_PATH_WAIT) {
-        update_state(last_state, AMRStateMachine::ON_FOLLOW_PATH);
         sub_cmd_cb_(false, SubCommand::RESUME);
+        update_state(last_state, AMRStateMachine::ON_FOLLOW_PATH);
       } else if (current_state_ == AMRStateMachine::P2PNAV_WAIT) {
-        update_state(last_state, AMRStateMachine::ON_P2PNAV);
         sub_cmd_cb_(true, SubCommand::RESUME);
+        update_state(last_state, AMRStateMachine::ON_P2PNAV);
       } else {
         return false;
       }
       break;
     case Message::RETURN_CHARGING_FINISH:
       if (current_state_ == AMRStateMachine::ON_RETURN_CHARGING) {
-        update_state(last_state, AMRStateMachine::LOW_POWER_CHARGING);
         enter_low_power_charging_state();
+        update_state(last_state, AMRStateMachine::LOW_POWER_CHARGING);
       } else {
         return false;
       }
       break;
     case Message::RETURN_CHARGING:
       if (current_state_ == AMRStateMachine::READY) {
-        update_state(last_state, AMRStateMachine::ON_RETURN_CHARGING);
         enter_on_return_charging_state();
+        update_state(last_state, AMRStateMachine::ON_RETURN_CHARGING);
       } else {
         return false;
       }
@@ -491,7 +490,6 @@ void AMRStateMachine::enter_on_ae_state()
 void AMRStateMachine::enter_on_p2p_state(const Message & msg)
 {
   send_navigator_cmd_ = true;
-  start_charging_cb_(false);
   start_p2p_cb_(msg.param);
 }
 
@@ -499,7 +497,6 @@ void AMRStateMachine::enter_on_follow_path_state(const Message & msg)
 {
   send_navigator_cmd_ = true;
   path_buffer_ = msg.param;
-  start_charging_cb_(false);
   start_follow_path_cb_(path_buffer_);
 }
 
@@ -509,7 +506,6 @@ void AMRStateMachine::enter_on_waypoint_follow_path_state(const Message & msg)
   uint32_t goal_id = msg.goal_id;
   vector<uint32_t> ids;
   ids.assign(msg.ids.begin(), msg.ids.end());
-  start_charging_cb_(false);
   start_waypoint_follow_path_cb_(goal_id, ids);
 }
 
@@ -574,8 +570,8 @@ void AMRStateMachine::return_charging_station()
 
 bool AMRStateMachine::check_potential_state(int cmd)
 {
-  printf("[%s]: Receive cmd: [%s]: current_state:%s\n", logger_,
-      Command::cmd_to_string(cmd).c_str(), get_current_state().c_str());
+  printf("[%s]:Receive cmd:%s, current_state:%s\n", logger_, Command::cmd_to_string(cmd).c_str(),
+      get_current_state().c_str());
 
   if (current_state_ == ON_ERROR) {
     printf("[%s]: check_potential_state(%d,%d) return false\n", logger_, cmd, current_state_);

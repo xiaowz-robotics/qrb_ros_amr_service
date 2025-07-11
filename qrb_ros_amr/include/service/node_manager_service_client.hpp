@@ -39,6 +39,8 @@ private:
 
   bool deactivate_node();
 
+  bool cleanup_node();
+
 public:
   explicit NodeManagerServiceClient(std::shared_ptr<AMRManager> & amr_manager,
       const rclcpp::NodeOptions & options = rclcpp::NodeOptions());

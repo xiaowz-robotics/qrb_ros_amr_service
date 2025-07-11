@@ -56,16 +56,19 @@ void NavigationActionClient::create_nav_client()
 
 void NavigationActionClient::start_p2p_nav(void * buffer)
 {
+  is_pausing_ = false;
   p2p_send_goal(buffer);
 }
 
 void NavigationActionClient::start_follow_path(void * path)
 {
+  is_pausing_ = false;
   follow_send_goal(path);
 }
 
 void NavigationActionClient::start_waypoint_follow_path(uint32_t goal, std::vector<uint32_t> & ids)
 {
+  is_pausing_ = false;
   waypoint_follow_send_goal(goal, ids);
 }
 
@@ -413,7 +416,6 @@ void NavigationActionClient::navigate_to_charging()
   this->p2p_client_ptr_->async_send_goal(goal, send_goal_options);
 
   std::unique_lock<std::mutex> lck(mtx_);
-  cv_.wait(lck);
 }
 
 void NavigationActionClient::charging_station_goal_response_callback(
@@ -421,7 +423,6 @@ void NavigationActionClient::charging_station_goal_response_callback(
 {
   if (!goal_handle) {
     RCLCPP_ERROR(logger_, "Goal of going charging station was rejected by server");
-    cv_.notify_one();
   } else {
     RCLCPP_INFO(logger_, "Goal of going charging station accepted by server, waiting for result");
   }
@@ -451,7 +452,6 @@ void NavigationActionClient::charging_station_result_callback(
       break;
   }
   RCLCPP_INFO(logger_, "[Charging station] Goal finished!");
-  cv_.notify_one();
   return;
 }
 

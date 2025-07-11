@@ -32,15 +32,17 @@ void MappingServiceServer::handle_mapping(const std::shared_ptr<rmw_request_id_t
 {
   (void)request_header;
   uint8_t cmd = request->cmd;
-  RCLCPP_INFO(logger_, "handle_mapping, cmd=%d", cmd);
+  RCLCPP_INFO(logger_, "handle_mapping, cmd=%s", Mapping_Cmd::to_string(cmd).c_str());
 
   bool result;
-  if (cmd == (uint8_t)Mapping_Cmd::START_MAPPING) {
+  if (cmd == Mapping_Cmd::START_MAPPING) {
     result = amr_manager_->start_mapping();
-  } else if (cmd == (uint8_t)Mapping_Cmd::STOP_MAPPING) {
+  } else if (cmd == Mapping_Cmd::STOP_MAPPING) {
     result = amr_manager_->stop_mapping();
-  } else if (cmd == (uint8_t)Mapping_Cmd::LOAD_MAP) {
+  } else if (cmd == Mapping_Cmd::LOAD_MAP) {
     result = amr_manager_->load_map();
+  } else {
+    result = false;
   }
   response->result = result;
 }
