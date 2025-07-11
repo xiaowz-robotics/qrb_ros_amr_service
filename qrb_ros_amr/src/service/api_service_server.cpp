@@ -11,8 +11,12 @@ namespace amr
 {
 APIServiceServer::APIServiceServer(std::shared_ptr<AMRManager> & amr_manager,
     std::shared_ptr<DeveloperModeSubscriber> & dev_sub,
+    std::shared_ptr<AMRStatusTransporter> & tansporter,
     const rclcpp::NodeOptions & options)
-  : Node("api_server", options), amr_manager_(amr_manager), dev_sub_(dev_sub)
+  : Node("api_server", options)
+  , amr_manager_(amr_manager)
+  , dev_sub_(dev_sub)
+  , tansporter_(tansporter)
 {
   init_service();
 }
@@ -43,6 +47,7 @@ void APIServiceServer::handle_api(const std::shared_ptr<rmw_request_id_t> reques
   switch (api) {
     case API::INIT_AMR:
       amr_manager_->init_amr();
+      tansporter_->init_battery_status();
       break;
     case API::RELEASE_AMR:
       amr_manager_->release_amr();

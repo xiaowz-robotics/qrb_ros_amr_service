@@ -86,7 +86,7 @@ private:
   void send_velocity(twist_vel & velocity);
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
   void init_service_client();
-  void init_battery_status();
+
   void get_battery_level();
   void send_request(const GetBatteryState::Request::SharedPtr request);
 
@@ -97,6 +97,7 @@ public:
   void stop_charging();
   void start_charging();
   void notify_battery_changed(float voltage);
+  void init_battery_status();
   AMRStatusTransporter(std::shared_ptr<AMRManager> & amr_manager,
       const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   ~AMRStatusTransporter();
