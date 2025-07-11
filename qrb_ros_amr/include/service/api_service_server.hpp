@@ -7,6 +7,7 @@
 #define QRB_ROS_AMR__API_SERVICE_SERVER_HPP_
 
 #include "developer_mode_subscriber.hpp"
+#include "amr_status_transporter.hpp"
 #include "amr_manager.hpp"
 #include "ros_common.hpp"
 
@@ -23,6 +24,7 @@ private:
   rclcpp::Service<qrb_ros_amr_msgs::srv::API>::SharedPtr srv_ptr_;
   std::shared_ptr<AMRManager> amr_manager_;
   std::shared_ptr<DeveloperModeSubscriber> dev_sub_;
+  std::shared_ptr<AMRStatusTransporter> tansporter_;
 
   void init_service();
   void handle_api(const std::shared_ptr<rmw_request_id_t> request_header,
@@ -32,6 +34,7 @@ private:
 public:
   APIServiceServer(std::shared_ptr<AMRManager> & amr_manager,
       std::shared_ptr<DeveloperModeSubscriber> & dev_sub,
+      std::shared_ptr<AMRStatusTransporter> & tansporter,
       const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   ~APIServiceServer();
 };

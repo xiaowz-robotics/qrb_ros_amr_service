@@ -20,7 +20,6 @@ AMRStatusTransporter::AMRStatusTransporter(std::shared_ptr<AMRManager> & amr_man
   init_tf_subscriber();
   init_publisher();
   init_service_client();
-  init_battery_status();
   last_time_ = 0;
 }
 
@@ -337,6 +336,7 @@ void AMRStatusTransporter::send_velocity(twist_vel & velocity)
 void AMRStatusTransporter::init_battery_status()
 {
   voltage_ = 0;
+  RCLCPP_INFO(logger_, "init_battery_status");
   get_battery_level();
 
   message_.status_change_id = (int)StatusID::Battery_Level;
@@ -372,6 +372,7 @@ void AMRStatusTransporter::send_request(const GetBatteryState::Request::SharedPt
     std::unique_lock<std::mutex> lck(mtx_);
     auto result = future.get();
     voltage_ = result->battery_state.voltage;
+    RCLCPP_INFO(logger_, "voltage=%.2f", voltage_);
     power_supply_status_ = result->battery_state.power_supply_status;
     cv_.notify_one();
   };
