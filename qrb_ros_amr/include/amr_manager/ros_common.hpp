@@ -37,6 +37,7 @@
 #include "qrb_ros_navigation_msgs/action/follow_path.hpp"
 #include "qrb_ros_navigation_msgs/srv/virtual_path.hpp"
 #include "qrb_ros_robot_base_msgs/srv/set_control_mode.hpp"
+#include "qrb_ros_robot_base_msgs/srv/get_battery_state.hpp"
 #include "qrb_ros_robot_base_msgs/msg/charger_cmd.hpp"
 #include "qrb_ros_robot_base_msgs/msg/error.hpp"
 #include "qrb_ros_slam_msgs/srv/slam_command.hpp"
@@ -69,6 +70,7 @@ using GoalHandleWaypointFollowPath = rclcpp_action::ClientGoalHandle<WaypointFol
 
 using SetBaseControlMode = qrb_ros_robot_base_msgs::srv::SetControlMode;
 using ChargerCmd = qrb_ros_robot_base_msgs::msg::ChargerCmd;
+using GetBatteryState = qrb_ros_robot_base_msgs::srv::GetBatteryState;
 
 using SlamCommand = qrb_ros_slam_msgs::srv::SlamCommand;
 using CommandCode = qrb_ros_slam_msgs::msg::CommandCode;

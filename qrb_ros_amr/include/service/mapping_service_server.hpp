@@ -15,11 +15,32 @@ namespace qrb_ros
 {
 namespace amr
 {
-enum class Mapping_Cmd
+class Mapping_Cmd
 {
-  LOAD_MAP = 1,
-  START_MAPPING = 2,
-  STOP_MAPPING = 3,
+public:
+  const static uint8_t LOAD_MAP = 1;
+  const static uint8_t START_MAPPING = 2;
+  const static uint8_t STOP_MAPPING = 3;
+
+  static std::string to_string(uint8_t cmd)
+  {
+    std::string message;
+    switch (cmd) {
+      case LOAD_MAP:
+        message = "load_map";
+        break;
+      case START_MAPPING:
+        message = "start_mapping";
+        break;
+      case STOP_MAPPING:
+        message = "stop_mapping";
+        break;
+      default:
+        message = "INVAILD";
+        break;
+    }
+    return message;
+  }
 };
 
 class MappingServiceServer : public rclcpp::Node

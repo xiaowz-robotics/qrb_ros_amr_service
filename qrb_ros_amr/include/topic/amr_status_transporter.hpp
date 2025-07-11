@@ -38,6 +38,7 @@ private:
   rclcpp::Publisher<ChargerCmd>::SharedPtr charger_pub_;
   rclcpp::Subscription<qrb_ros_amr_msgs::msg::WheelStatus>::SharedPtr wheel_sub_;
   rclcpp::Subscription<sensor_msgs::msg::BatteryState>::SharedPtr battery_sub_;
+  rclcpp::Client<GetBatteryState>::SharedPtr client_;
   rclcpp::Subscription<PoseStamped>::SharedPtr pose_sub_;
   std::shared_ptr<AMRManager> amr_manager_;
 
@@ -51,6 +52,9 @@ private:
   PoseStamped last_pose_;
   rclcpp::TimerBase::SharedPtr timer_{ nullptr };
   std::mutex mtx_;
+  std::condition_variable cv_;
+  float voltage_;
+  uint8_t power_supply_status_;
   bool active_ = false;
   bool tf_working_;
   uint64_t count_;
@@ -81,6 +85,10 @@ private:
   void battery_status_callback(const sensor_msgs::msg::BatteryState::SharedPtr msg);
   void send_velocity(twist_vel & velocity);
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
+  void init_service_client();
+  void init_battery_status();
+  void get_battery_level();
+  void send_request(const GetBatteryState::Request::SharedPtr request);
 
 public:
   void notify_exception_event(bool exception, uint8_t error_code);
