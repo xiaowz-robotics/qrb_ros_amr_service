@@ -48,7 +48,8 @@ void AMRController::init_nodes()
   dev_sub_ = std::shared_ptr<DeveloperModeSubscriber>(
       new DeveloperModeSubscriber(amr_manager_, exception_sub_, amr_status_transporter_));
 
-  api_server_ = std::shared_ptr<APIServiceServer>(new APIServiceServer(amr_manager_, dev_sub_, amr_status_transporter_));
+  api_server_ = std::shared_ptr<APIServiceServer>(
+      new APIServiceServer(amr_manager_, dev_sub_, amr_status_transporter_));
 
   node_manager_client_ =
       std::shared_ptr<NodeManagerServiceClient>(new NodeManagerServiceClient(amr_manager_));

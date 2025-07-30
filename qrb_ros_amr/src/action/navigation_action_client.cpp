@@ -416,6 +416,7 @@ void NavigationActionClient::navigate_to_charging()
   this->p2p_client_ptr_->async_send_goal(goal, send_goal_options);
 
   std::unique_lock<std::mutex> lck(mtx_);
+  cv_.wait(lck);
 }
 
 void NavigationActionClient::charging_station_goal_response_callback(
@@ -423,6 +424,7 @@ void NavigationActionClient::charging_station_goal_response_callback(
 {
   if (!goal_handle) {
     RCLCPP_ERROR(logger_, "Goal of going charging station was rejected by server");
+    cv_.notify_one();
   } else {
     RCLCPP_INFO(logger_, "Goal of going charging station accepted by server, waiting for result");
   }
@@ -452,6 +454,7 @@ void NavigationActionClient::charging_station_result_callback(
       break;
   }
   RCLCPP_INFO(logger_, "[Charging station] Goal finished!");
+  cv_.notify_one();
   return;
 }
 
