@@ -103,6 +103,7 @@ public:
   const static int ON_ME = 12;
   const static int ME_DONE = 13;
   const static int LOCALIZATION = 14;
+  const static int ON_EXCEPTION = 15;
 
   std::string get_current_state();
   void register_start_p2p_nav_callback(start_p2p_func_t cb);
@@ -179,6 +180,9 @@ public:
         break;
       case LOCALIZATION:
         message = "LOCALIZATION";
+        break;
+      case ON_EXCEPTION:
+        message = "ON_EXCEPTION";
         break;
       default:
         message = "INVALID_STATE";

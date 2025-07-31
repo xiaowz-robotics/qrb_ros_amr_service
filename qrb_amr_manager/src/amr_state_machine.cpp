@@ -127,6 +127,12 @@ bool AMRStateMachine::load_map()
 bool AMRStateMachine::start_mapping()
 {
   bool result;
+  if (current_state_ != AMRStateMachine::IDLE) {
+    printf("[%s]: Start mapping failed because current state=%s\n", logger_,
+        get_current_state().c_str());
+    return false;
+  }
+
   slam_command_cb_((uint8_t)Slam_Command::StartMapping, result);
   if (!result) {
     printf("[%s]: Start mapping failed\n", logger_);
@@ -221,15 +227,10 @@ bool AMRStateMachine::handle_message(const Message & msg)
       }
       break;
     case Message::RELEASE_AMR:
-      if (current_state_ == AMRStateMachine::ON_AE) {
-        // TODO:
-      } else if (current_state_ == AMRStateMachine::ON_P2PNAV) {
-        sub_cmd_cb_(true, SubCommand::CANCEL);
-      } else if (current_state_ == AMRStateMachine::ON_FOLLOW_PATH) {
-        sub_cmd_cb_(false, SubCommand::CANCEL);
+      if ((current_state_ == AMRStateMachine::IDLE) || (current_state_ == AMRStateMachine::READY)) {
+        deactivate_node();
+        update_state(last_state, AMRStateMachine::IN_ACTIVE);
       }
-      deactivate_node();
-      update_state(last_state, AMRStateMachine::IN_ACTIVE);
       break;
     case Message::ME_COMPLETED:
       if (current_state_ != AMRStateMachine::ON_ME) {
@@ -342,8 +343,20 @@ bool AMRStateMachine::handle_message(const Message & msg)
       low_power_ = false;
       break;
     case Message::AMR_EXCEPTION: {
-      enter_on_error_state();
-      update_state(last_state, AMRStateMachine::ON_ERROR);
+      if (current_state_ == AMRStateMachine::IDLE || current_state_ == AMRStateMachine::ON_ME ||
+          current_state_ == AMRStateMachine::ME_DONE ||
+          current_state_ == AMRStateMachine::LOCALIZATION) {
+        enter_on_error_state();
+        update_state(last_state, AMRStateMachine::ON_EXCEPTION);
+      } else if (current_state_ == AMRStateMachine::READY ||
+                 current_state_ == AMRStateMachine::ON_FOLLOW_PATH ||
+                 current_state_ == AMRStateMachine::FOLLOW_PATH_WAIT ||
+                 current_state_ == AMRStateMachine::ON_P2PNAV ||
+                 current_state_ == AMRStateMachine::P2PNAV_WAIT ||
+                 current_state_ == AMRStateMachine::ON_RETURN_CHARGING) {
+        enter_on_error_state();
+        update_state(last_state, AMRStateMachine::ON_ERROR);
+      }
       uint8_t error_code = msg.error_code;
       notify_exception_cb_(true, error_code);
     } break;

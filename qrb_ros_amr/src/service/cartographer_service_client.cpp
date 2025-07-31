@@ -51,11 +51,6 @@ CartographerServiceClient::~CartographerServiceClient()
 bool CartographerServiceClient::start_mapping()
 {
   RCLCPP_INFO(logger_, "start_mapping");
-  if (!remove_waypoint_and_virtual_path()) {
-    RCLCPP_ERROR(logger_, "Remove waypoint and virtual path failed");
-    return false;
-  }
-
   auto request = std::make_shared<SlamCommand::Request>();
   request->command_id = CommandCode::START_MAPPING;
 
@@ -65,6 +60,11 @@ bool CartographerServiceClient::start_mapping()
 bool CartographerServiceClient::stop_mapping()
 {
   RCLCPP_INFO(logger_, "stop_mapping");
+  if (!remove_waypoint_and_virtual_path()) {
+    RCLCPP_ERROR(logger_, "Remove waypoint and virtual path failed");
+    return false;
+  }
+
   auto request = std::make_shared<SlamCommand::Request>();
   request->command_id = CommandCode::FINISH_MAPPING;
 
