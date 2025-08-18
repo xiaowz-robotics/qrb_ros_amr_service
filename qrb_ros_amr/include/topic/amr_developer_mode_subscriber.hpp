@@ -8,7 +8,7 @@
 
 #include "amr_manager.hpp"
 #include "ros_common.hpp"
-#include "exception_subscriber.hpp"
+#include "amr_exception_subscriber.hpp"
 #include "amr_status_transporter.hpp"
 
 using namespace qrb::amr_manager;

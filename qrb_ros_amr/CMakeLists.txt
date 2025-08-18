@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(qrb_ros_amr VERSION 1.0.3)
 
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/opt/ros/jazzy/lib")
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -47,8 +49,8 @@ set(source
   src/main.cpp
   src/amr_controller.cpp
   src/topic/amr_status_transporter.cpp
-  src/topic/developer_mode_subscriber.cpp
-  src/topic/exception_subscriber.cpp
+  src/topic/amr_developer_mode_subscriber.cpp
+  src/topic/amr_exception_subscriber.cpp
   src/service/api_service_server.cpp
   src/service/sub_cmd_service_server.cpp
   src/service/cartographer_service_client.cpp

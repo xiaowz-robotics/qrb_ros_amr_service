@@ -6,7 +6,7 @@
 #ifndef QRB_ROS_AMR__API_SERVICE_SERVER_HPP_
 #define QRB_ROS_AMR__API_SERVICE_SERVER_HPP_
 
-#include "developer_mode_subscriber.hpp"
+#include "amr_developer_mode_subscriber.hpp"
 #include "amr_status_transporter.hpp"
 #include "amr_manager.hpp"
 #include "ros_common.hpp"
