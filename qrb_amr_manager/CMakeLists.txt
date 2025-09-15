@@ -19,38 +19,21 @@ add_library(${library_name} SHARED
   src/low_power_manager.cpp
 )
 
-aux_source_directory(./src SRC_LIST)
-
-ament_target_dependencies(qrb_amr_manager
-
-)
-
 set_target_properties(${PROJECT_NAME} PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION 1
 )
 
 install(TARGETS qrb_amr_manager
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
-)
-
-install(TARGETS ${PROJECT_NAME}
+  EXPORT export_qrb_amr_manager
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
-file(GLOB_RECURSE HEADER_FILES
-  "${CMAKE_SOURCE_DIR}/include/*.h"
-  "${CMAKE_SOURCE_DIR}/include/*.hpp"
-)
+ament_export_targets(export_qrb_amr_manager)
 
-install(FILES ${HEADER_FILES}
-  DESTINATION include/${PROJECT_NAME}/
-)
-
-install(DIRECTORY
-  include
-  DESTINATION include/${PROJECT_NAME}/
-)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 ament_auto_package()
+

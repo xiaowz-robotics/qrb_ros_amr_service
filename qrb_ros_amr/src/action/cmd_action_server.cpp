@@ -122,11 +122,11 @@ void CmdActionServer::execute(const std::shared_ptr<GoalHandleCmd> goal_handle)
     amr_manager_->process_cmd(Message::ME, nullptr, 0);
   } else if (goal->command == Command::P2PNAV) {
     ptr = (void *)&(goal->goal);
-    RCLCPP_INFO(logger_, "execute goal size: %d", sizeof(goal->goal));
+    RCLCPP_INFO(logger_, "execute goal size: %ld", sizeof(goal->goal));
     amr_manager_->process_cmd(Message::P2PNAV, ptr, sizeof(goal->goal));
   } else if (goal->command == Command::FOLLOW_PATH) {
     ptr = (void *)&(goal->path);
-    RCLCPP_INFO(logger_, "execute goal size: %d", sizeof(goal->goal));
+    RCLCPP_INFO(logger_, "execute goal size: %ld", sizeof(goal->goal));
     amr_manager_->process_cmd(Message::FOLLOW_PATH, ptr, sizeof(goal->path));
   } else if (goal->command == Command::CHARGING) {
     amr_manager_->process_cmd(Message::RETURN_CHARGING, nullptr, 0);
@@ -136,7 +136,7 @@ void CmdActionServer::execute(const std::shared_ptr<GoalHandleCmd> goal_handle)
     if (goal->passing_waypoint_ids.size() != 0) {
       ids.assign(goal->passing_waypoint_ids.begin(), goal->passing_waypoint_ids.end());
     }
-    RCLCPP_INFO(logger_, "execute goal id =%d, passing_waypoint size: %d", goal_id,
+    RCLCPP_INFO(logger_, "execute goal id =%d, passing_waypoint size: %ld", goal_id,
         sizeof(goal->passing_waypoint_ids));
     amr_manager_->process_cmd(Message::WAYPOINT_FOLLOW_PATH, goal_id, ids);
   }

@@ -104,7 +104,7 @@ void AMRStatusTransporter::odom_callback(const nav_msgs::msg::Odometry::SharedPt
   long now = rclcpp::Clock().now().seconds();
   long duration = now - last_time_;
   if (duration < 1) {
-    RCLCPP_DEBUG(logger_, "duration=%d", duration);
+    RCLCPP_DEBUG(logger_, "duration=%ld", duration);
     return;
   }
   last_time_ = now;
@@ -202,8 +202,7 @@ void AMRStatusTransporter::convert_tf_to_pose()
         target_pose_.pose.orientation.x, target_pose_.pose.orientation.y,
         target_pose_.pose.orientation.z, target_pose_.pose.orientation.w);
 
-    RCLCPP_DEBUG(logger_, "transform pose: header:(%d, %s)", target_pose_.header.stamp,
-        target_pose_.header.frame_id.c_str());
+    RCLCPP_DEBUG(logger_, "transform pose: header:(%s)", target_pose_.header.frame_id.c_str());
 
     tf_working_ = true;
     update_amr_pose(target_pose_);

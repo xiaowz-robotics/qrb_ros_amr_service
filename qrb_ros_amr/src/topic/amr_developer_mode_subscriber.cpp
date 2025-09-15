@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#include "developer_mode_subscriber.hpp"
+#include "amr_developer_mode_subscriber.hpp"
 
 namespace qrb_ros
 {
