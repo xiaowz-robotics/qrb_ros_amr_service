@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(qrb_ros_amr VERSION 1.0.3)
 
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/opt/ros/jazzy/lib")
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -27,6 +29,8 @@ find_package(qrb_amr_manager REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 ament_auto_find_build_dependencies()
 
+include_directories(${qrb_amr_manager_INCLUDE_DIRS})
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/topic
@@ -34,12 +38,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include/action
     ${PROJECT_SOURCE_DIR}/include/amr_manager/
     ${EIGEN3_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/../install/qrb_amr_manager/include/qrb_amr_manager/
-    ${PROJECT_SOURCE_DIR}/../install/qrb_amr_manager/include/qrb_amr_manager/include/
-    ${PROJECT_SOURCE_DIR}/../install/include/qrb_amr_manager/
-    ${PROJECT_SOURCE_DIR}/../install/include/qrb_amr_manager/include/
-    ${CMAKE_SYSROOT}/usr/include/qrb_amr_manager/
-    ${CMAKE_SYSROOT}/usr/include/qrb_amr_manager/include/
     )
 include_directories(${JSON_INC_PATH})
 
@@ -47,8 +45,8 @@ set(source
   src/main.cpp
   src/amr_controller.cpp
   src/topic/amr_status_transporter.cpp
-  src/topic/developer_mode_subscriber.cpp
-  src/topic/exception_subscriber.cpp
+  src/topic/amr_developer_mode_subscriber.cpp
+  src/topic/amr_exception_subscriber.cpp
   src/service/api_service_server.cpp
   src/service/sub_cmd_service_server.cpp
   src/service/cartographer_service_client.cpp
@@ -84,10 +82,6 @@ ament_target_dependencies(qrb_ros_amr
   "qrb_ros_slam_msgs"
   "qrb_amr_manager"
   "lifecycle_msgs"
-)
-
-target_link_libraries(qrb_ros_amr
-  "qrb_amr_manager"
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

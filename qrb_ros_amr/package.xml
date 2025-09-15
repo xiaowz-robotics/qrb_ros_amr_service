@@ -21,6 +21,7 @@
   <depend>qrb_ros_slam_msgs</depend>
   <depend>qrb_amr_manager</depend>
   <depend>nav_2d_msgs</depend>
+  <depend>nav2_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

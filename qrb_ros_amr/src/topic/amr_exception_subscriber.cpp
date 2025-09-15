@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
-#include "exception_subscriber.hpp"
+#include "amr_exception_subscriber.hpp"
 
 namespace qrb_ros
 {
