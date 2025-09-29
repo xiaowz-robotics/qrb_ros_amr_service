@@ -1,0 +1,12 @@
+Source: ros-jazzy-qrb-amr-manager
+Section: misc
+Priority: optional
+Maintainer: xiaowz <quic_xiaowz@quicinc.com>
+Build-Depends: debhelper-compat(=13), ros-jazzy-ament-cmake-auto, ros-jazzy-ament-lint-auto <!nocheck>, ros-jazzy-ament-lint-common <!nocheck>
+Homepage: https://github.com/qualcomm-qrb-ros/qrb_ros_amr_service
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-qrb-amr-manager
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Description: Manage AMR behavior
