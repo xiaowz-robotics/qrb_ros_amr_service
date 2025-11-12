@@ -1,0 +1,12 @@
+Source: ros-jazzy-qrb-ros-amr
+Section: misc
+Priority: optional
+Maintainer: xiaowz <quic_xiaowz@quicinc.com>
+Build-Depends: debhelper-compat(=13), ros-jazzy-ament-cmake-auto, ros-jazzy-nav-2d-msgs, ros-jazzy-nav2-msgs, ros-jazzy-qrb-amr-manager, ros-jazzy-qrb-ros-amr-msgs, ros-jazzy-qrb-ros-navigation-msgs, ros-jazzy-qrb-ros-robot-base-msgs, ros-jazzy-qrb-ros-slam-msgs
+Homepage: https://github.com/qualcomm-qrb-ros/qrb_ros_amr_service
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-qrb-ros-amr
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-jazzy-nav-2d-msgs, ros-jazzy-nav2-msgs, ros-jazzy-qrb-amr-manager, ros-jazzy-qrb-ros-amr-msgs, ros-jazzy-qrb-ros-navigation-msgs, ros-jazzy-qrb-ros-robot-base-msgs, ros-jazzy-qrb-ros-slam-msgs
+Description: ROS node of AMR service

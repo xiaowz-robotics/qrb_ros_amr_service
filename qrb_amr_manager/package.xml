@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>qrb_amr_manager</name>
-  <version>1.0.0</version>
+  <version>1.0.4</version>
   <description>Manage AMR behavior</description>
 
   <license>BSD-3-Clause-Clear</license>
@@ -10,7 +10,7 @@
   <author email="quic_xiaowz@quicinc.com">xiaowz</author>
   <maintainer email="quic_xiaowz@quicinc.com">xiaowz</maintainer>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
